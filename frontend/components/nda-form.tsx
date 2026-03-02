@@ -139,7 +139,7 @@ export function NdaForm({ data, onChange }: NdaFormProps) {
             value={data.governingLaw}
             onValueChange={(v) => update({ governingLaw: v })}
           >
-            <SelectTrigger id="governingLaw">
+            <SelectTrigger id="governingLaw" className="w-full">
               <SelectValue placeholder="Select a state" />
             </SelectTrigger>
             <SelectContent>
@@ -208,7 +208,7 @@ function PartySection({
   party: PartyInfo;
   onChange: (fields: Partial<PartyInfo>) => void;
 }) {
-  const prefix = title.toLowerCase().replace(" ", "");
+  const prefix = title.toLowerCase().replace(/\s+/g, "");
   return (
     <section className="space-y-4">
       <h3 className="text-lg font-semibold">{title}</h3>

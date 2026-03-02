@@ -13,12 +13,23 @@ interface NdaPreviewProps {
 export function NdaPreview({ data }: NdaPreviewProps) {
   const previewRef = useRef<HTMLDivElement>(null);
 
-  function downloadPdf() {
+  function printDocument() {
     const element = previewRef.current;
     if (!element) return;
 
     const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
+    if (!printWindow) {
+      alert(
+        "Your browser blocked the print window. Please allow pop-ups for this site and try again."
+      );
+      return;
+    }
+
+    // Assign onload BEFORE document.close() to avoid race condition
+    printWindow.onload = () => {
+      printWindow.print();
+      printWindow.onafterprint = () => printWindow.close();
+    };
 
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -33,10 +44,6 @@ export function NdaPreview({ data }: NdaPreviewProps) {
       </html>
     `);
     printWindow.document.close();
-    printWindow.onload = () => {
-      printWindow.print();
-      printWindow.onafterprint = () => printWindow.close();
-    };
   }
 
   const coverPageHtml = renderCoverPage(data);
@@ -46,7 +53,7 @@ export function NdaPreview({ data }: NdaPreviewProps) {
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Document Preview</h2>
-        <Button onClick={downloadPdf}>Download PDF</Button>
+        <Button onClick={printDocument}>Print / Save as PDF</Button>
       </div>
       <div className="flex-1 overflow-auto border rounded-lg bg-white">
         <div ref={previewRef} className="nda-document p-8">

@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { NdaForm } from "@/components/nda-form";
 import { NdaPreview } from "@/components/nda-preview";
-import { NdaFormData, defaultFormData } from "@/lib/nda-types";
+import { NdaFormData, createDefaultFormData } from "@/lib/nda-types";
 
 export default function Home() {
-  const [formData, setFormData] = useState<NdaFormData>(defaultFormData);
+  const [formData, setFormData] = useState<NdaFormData>(createDefaultFormData);
 
   return (
     <div className="min-h-screen bg-muted/40">

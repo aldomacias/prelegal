@@ -32,16 +32,18 @@ export const US_STATES = [
   "West Virginia", "Wisconsin", "Wyoming",
 ];
 
-export const defaultFormData: NdaFormData = {
-  purpose: "Evaluating whether to enter into a business relationship with the other party.",
-  effectiveDate: new Date().toISOString().split("T")[0],
-  mndaTermType: "expires",
-  mndaTermDuration: "1 year",
-  confidentialityTermType: "fixed",
-  confidentialityTermDuration: "1 year",
-  governingLaw: "",
-  jurisdiction: "",
-  modifications: "",
-  party1: { name: "", title: "", company: "", noticeAddress: "" },
-  party2: { name: "", title: "", company: "", noticeAddress: "" },
-};
+export function createDefaultFormData(): NdaFormData {
+  return {
+    purpose: "Evaluating whether to enter into a business relationship with the other party.",
+    effectiveDate: new Date().toISOString().split("T")[0],
+    mndaTermType: "expires",
+    mndaTermDuration: "1 year",
+    confidentialityTermType: "fixed",
+    confidentialityTermDuration: "1 year",
+    governingLaw: "",
+    jurisdiction: "",
+    modifications: "",
+    party1: { name: "", title: "", company: "", noticeAddress: "" },
+    party2: { name: "", title: "", company: "", noticeAddress: "" },
+  };
+}

@@ -1,7 +1,18 @@
 import { NdaFormData } from "./nda-types";
 
+const BLANK_PLACEHOLDER = "___________";
+
+export function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function formatDate(dateStr: string): string {
-  if (!dateStr) return "___________";
+  if (!dateStr) return BLANK_PLACEHOLDER;
   const date = new Date(dateStr + "T00:00:00");
   return date.toLocaleDateString("en-US", {
     year: "numeric",
@@ -10,8 +21,8 @@ function formatDate(dateStr: string): string {
   });
 }
 
-function blank(value: string, placeholder: string = "___________"): string {
-  return value.trim() || placeholder;
+function blank(value: string, placeholder: string = BLANK_PLACEHOLDER): string {
+  return value.trim() ? escapeHtml(value) : placeholder;
 }
 
 export function renderCoverPage(data: NdaFormData): string {
@@ -70,7 +81,7 @@ export function renderCoverPage(data: NdaFormData): string {
         data.modifications.trim()
           ? `<div class="field-section">
               <h3>MNDA Modifications</h3>
-              <p>${data.modifications}</p>
+              <p>${escapeHtml(data.modifications)}</p>
             </div>`
           : ""
       }
