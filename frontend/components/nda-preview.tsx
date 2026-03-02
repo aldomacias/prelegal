@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { NdaFormData } from "@/lib/nda-types";
 import { renderCoverPage, renderStandardTerms } from "@/lib/nda-template";
+import { getNdaDocumentStyles } from "@/lib/nda-print-styles";
 
 interface NdaPreviewProps {
   data: NdaFormData;
@@ -12,21 +13,30 @@ interface NdaPreviewProps {
 export function NdaPreview({ data }: NdaPreviewProps) {
   const previewRef = useRef<HTMLDivElement>(null);
 
-  async function downloadPdf() {
+  function downloadPdf() {
     const element = previewRef.current;
     if (!element) return;
 
-    const html2pdf = (await import("html2pdf.js")).default;
-    html2pdf()
-      .set({
-        margin: [10, 15],
-        filename: "Mutual-NDA.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "mm", format: "letter", orientation: "portrait" },
-      })
-      .from(element)
-      .save();
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Mutual NDA</title>
+          <style>${getNdaDocumentStyles()}</style>
+        </head>
+        <body>
+          ${element.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.print();
+      printWindow.onafterprint = () => printWindow.close();
+    };
   }
 
   const coverPageHtml = renderCoverPage(data);
